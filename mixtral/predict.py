@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import mmap
 import time
 
 from cog import BasePredictor, ConcatenateIterator, Input
@@ -35,14 +36,22 @@ def consolidate_shards(prefix, output_file, num_shards, drop_shards=False):
     print(f"Consolidating {num_shards} shards into {output_file}")
     shard_files = [f"{prefix}-split{i:02d}.pth" for i in range(num_shards)]
     with open(output_file, "wb") as outfile:
+        # this could be a lot better...
         subprocess.run(["cat"] + shard_files, stdout=outfile)
     if drop_shards:
         for shard in shard_files:
             os.remove(shard)
 
 
-def load_weights():
-    if not os.path.exists("weights-cache/consolidated.00.pth"):
+# zipfile requires seekable
+class SeekableMmap(mmap.mmap):
+    def seekable(self) -> bool:
+        return True
+
+
+def load_weights() -> mmap.mmap:
+    f = "weights-cache/consolidated.00.pth"
+    if not os.path.exists(f):
         start = time.time()
         maybe_download_with_pget(
             path="weights-cache",
@@ -50,20 +59,20 @@ def load_weights():
             remote_filenames=REMOTE_FILES,
         )
         print(f"downloading weights took {time.time() - start:.3f}s...now consolidating shards...")
-        consolidate_shards(
-            "weights-cache/consolidated.00.pth", "weights-cache/consolidated.00.pth", 9, drop_shards=False
-        )
+        consolidate_shards(f, f, 9, drop_shards=False)
+    return SeekableMmap(os.open(f, os.O_RDWR), 0)
 
 
 class Predictor(BasePredictor):
     def setup(self):
-        load_weights()
+        ckpt_mmap = load_weights()
         # consolidate_shards('weights-cache/consolidated.00.pth', 'weights-cache/consolidated.00.pth', 9)
         self.model = Llama.build(
             ckpt_dir="weights-cache",
             tokenizer_path="weights-cache/tokenizer.model",
             max_seq_len=32768,  # 2048 # 512
             max_batch_size=8,
+            ckpt_filelike=ckpt_mmap,
         )
 
     def predict(
