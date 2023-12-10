@@ -111,7 +111,7 @@ class Llama:
         model = Transformer(model_args)
         print("=== created Mixtral 8x7B")
         loadable = ckpt_filelike or ckpt_path
-        checkpoint = torch.load(loadable, map_location="cpu")
+        checkpoint = torch.load(loadable)#, map_location="cpu")
         model.load_state_dict(checkpoint, strict=False)
         print(f"Loaded in {time.time() - start_time:.2f} seconds")
 
@@ -189,6 +189,7 @@ class Llama:
             next_token = next_token.reshape(-1)
             # only replace token if prompt has already been generated
             next_token = torch.where(input_text_mask[:, cur_pos], tokens[:, cur_pos], next_token)
+            # yield somewhere around here for streaming
             tokens[:, cur_pos] = next_token
             if logprobs:
                 token_logprobs[:, prev_pos + 1 : cur_pos + 1] = -F.cross_entropy(
