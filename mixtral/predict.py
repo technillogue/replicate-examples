@@ -1,11 +1,12 @@
+import json
 import os
 import subprocess
 import time
-from cog import BasePredictor, Input, ConcatenateIterator
 
+from cog import BasePredictor, ConcatenateIterator, Input
+
+from src import Llama, Message
 from utils import maybe_download_with_pget
-from src import Llama
-
 
 MODEL_ID = "mixtral-8x7b-32kseqlen"
 WEIGHTS_URL = "https://weights.replicate.delivery/hf/mixtral-8x7b-32kseqlen"
@@ -33,11 +34,12 @@ def consolidate_shards(prefix, output_file, num_shards, drop_shards=False):
         return
     print(f"Consolidating {num_shards} shards into {output_file}")
     shard_files = [f"{prefix}-split{i:02d}.pth" for i in range(num_shards)]
-    with open(output_file, 'wb') as outfile:
-        subprocess.run(['cat'] + shard_files, stdout=outfile)
+    with open(output_file, "wb") as outfile:
+        subprocess.run(["cat"] + shard_files, stdout=outfile)
     if drop_shards:
         for shard in shard_files:
             os.remove(shard)
+
 
 def load_weights():
     if not os.path.exists("weights-cache/consolidated.00.pth"):
@@ -48,7 +50,10 @@ def load_weights():
             remote_filenames=REMOTE_FILES,
         )
         print(f"downloading weights took {time.time() - start:.3f}s...now consolidating shards...")
-        consolidate_shards('weights-cache/consolidated.00.pth', 'weights-cache/consolidated.00.pth', 9, drop_shards=False)
+        consolidate_shards(
+            "weights-cache/consolidated.00.pth", "weights-cache/consolidated.00.pth", 9, drop_shards=False
+        )
+
 
 class Predictor(BasePredictor):
     def setup(self):
@@ -57,7 +62,7 @@ class Predictor(BasePredictor):
         self.model = Llama.build(
             ckpt_dir="weights-cache",
             tokenizer_path="weights-cache/tokenizer.model",
-            max_seq_len=32768, # 2048 # 512
+            max_seq_len=32768,  # 2048 # 512
             max_batch_size=8,
         )
 
@@ -75,13 +80,27 @@ class Predictor(BasePredictor):
             description="A probability threshold for generating the output. If < 1.0, only keep the top tokens with cumulative probability >= top_p (nucleus filtering). Nucleus filtering is described in Holtzman et al. (http://arxiv.org/abs/1904.09751).",
             default=DEFAULT_TOP_P,
         ),
-        # messages: str = Input(description="messages as json", default="{}")
+        messages: str = Input(description="conversation messages as json", default="{}")
         # TODO - support optionally returning logprobs
         # logprobs: bool = Input(
         #     description="Whether to return the log probabilities of the generated tokens.", default=False
         # ),
     ) -> str:
         start = time.time()
+        # just surface any JSONDecode error as-is
+        message_list = json.loads(messages)
+        if message_list:
+            # i guess this isn't technically needed
+            dialog = list(map(Message, message_list))
+            results = self.model.chat_completion(
+                dialogs=[dialog],
+                max_gen_len=max_new_tokens,
+                temperature=temperature,
+                top_p=top_p,
+                # logprobs=logprobs,
+            )
+            print(f"generation took {time.time() - start:.3f}s")
+            return results[0]["generation"]["content"]  # results[0]["logprobs"]
         results = self.model.text_completion(
             prompts=[prompt],
             max_gen_len=max_new_tokens,
