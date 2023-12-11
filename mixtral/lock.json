@@ -13,6 +13,18 @@
         "url": "https://files.pythonhosted.org/packages/69/8d/769a1e9cdce1c9774dd2edc8f4e94c759256246066e5263de917e5b22a0a/aiohttp-3.9.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
         "version": "3.9.1"
       },
+      "aioice": {
+        "sha256": "b609597a3a5a611e0004ff04772e16aceb881d51c25c0afc4ceac05d5e50024e",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/b6/35/d21e48d3ba25d32aba5d142d54c4491376c659dd74d052a30dd25198007b/aioice-0.9.0-py3-none-any.whl",
+        "version": "0.9.0"
+      },
+      "aiortc": {
+        "sha256": "eb4bd45397945a5323bd077d43c702a3a991d75023f23649c1d18df5d80c221d",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/2a/00/1a7979599855f91359ca76af41fd52637c61484c47946007e8a82195979a/aiortc-1.6.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "version": "1.6.0"
+      },
       "aiosignal": {
         "sha256": "f8376fb07dd1e86a584e4fcdec80b36b7f81aac666ebc724e2c090300dd83b17",
         "type": "url",
@@ -30,6 +42,12 @@
         "type": "url",
         "url": "https://files.pythonhosted.org/packages/f0/eb/fcb708c7bf5056045e9e98f62b93bd7467eb718b0202e7698eb11d66416c/attrs-23.1.0-py3-none-any.whl",
         "version": "23.1.0"
+      },
+      "av": {
+        "sha256": "13790fbb889b955baf885fe3761e923e85537ef414173465ec293177cedb7b99",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/a6/45/f0c2a87e7cae809a58dbf90ecfa4be342414d4b208f47cb97f41fb77eb3f/av-11.0.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "version": "11.0.0"
       },
       "brotli": {
         "sha256": "a469274ad18dc0e4d316eefa616d1d0c2ff9da369af19fa6f3daa4f09671fd61",
@@ -73,6 +91,18 @@
         "url": "https://files.pythonhosted.org/packages/a4/16/16069418df6989fe964d92494c821154244377fb9bb82b7897ba085b965d/cog-0.8.6-py3-none-any.whl",
         "version": "0.8.6"
       },
+      "cryptography": {
+        "sha256": "43f2552a2378b44869fe8827aa19e69512e3245a219104438692385b0ee119d1",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/62/bd/69628ab50368b1beb900eb1de5c46f8137169b75b2458affe95f2f470501/cryptography-41.0.7-cp37-abi3-manylinux_2_28_x86_64.whl",
+        "version": "41.0.7"
+      },
+      "dnspython": {
+        "sha256": "57c6fbaaeaaf39c891292012060beb141791735dbb4004798328fc2c467402d8",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/f6/b4/0a9bee52c50f226a3cbfb54263d02bb421c7f2adc136520729c2c689c1e5/dnspython-2.4.2-py3-none-any.whl",
+        "version": "2.4.2"
+      },
       "fastapi": {
         "sha256": "f4165fb1fe3610c52cb1b8282c1480de9c34bc270f56a965aa93a884c350d605",
         "type": "url",
@@ -91,6 +121,12 @@
         "url": "https://files.pythonhosted.org/packages/e6/7e/74b176a5580e1a41da326d07cf47a0032923fb3eeec9afbd92bb5c6457df/frozenlist-1.4.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
         "version": "1.4.0"
       },
+      "google-crc32c": {
+        "sha256": "77e2fd3057c9d78e225fa0a2160f96b64a824de17840351b26825b0848022906",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/72/92/2a2fa23db7d0b0382accbdf09768c28f7c07fc8c354cdcf2f44a47f4314e/google_crc32c-1.5.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "version": "1.5.0"
+      },
       "h11": {
         "sha256": "e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761",
         "type": "url",
@@ -108,6 +144,12 @@
         "type": "url",
         "url": "https://files.pythonhosted.org/packages/c2/e7/a82b05cf63a603df6e68d59ae6a68bf5064484a0718ea5033660af4b54a9/idna-3.6-py3-none-any.whl",
         "version": "3.6"
+      },
+      "ifaddr": {
+        "sha256": "085e0305cfe6f16ab12d72e2024030f5d52674afad6911bb1eee207177b8a748",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/9c/1f/19ebc343cc71a7ffa78f17018535adc5cbdd87afb31d7c34874680148b32/ifaddr-0.2.0-py3-none-any.whl",
+        "version": "0.2.0"
       },
       "jinja2": {
         "sha256": "6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61",
@@ -168,6 +210,24 @@
         "type": "url",
         "url": "https://files.pythonhosted.org/packages/d2/16/2edfe3e52de9d46fee81d9b9ace90fd7a49a86e7a36d7fc280183f77515a/pydantic-1.10.13-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
         "version": "1.10.13"
+      },
+      "pyee": {
+        "sha256": "5d346a7d0f861a4b2e6c47960295bd895f816725b27d656181947346be98d7c1",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/16/cc/5cea8a0a0d3deb90b5a0d39ad1a6a1ccaa40a9ea86d793eb8a49d32a6ed0/pyee-11.1.0-py3-none-any.whl",
+        "version": "11.1.0"
+      },
+      "pylibsrtp": {
+        "sha256": "4ebf704c1e9d827d63cfde4999cdb954247ddf97e47b8f768c1ea47cc20ec51c",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/91/eb/277199f587962b0c2ce3f4d4e0ab8c3c85e7c4ca1963b955ae582296e46a/pylibsrtp-0.9.1-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "version": "0.9.1"
+      },
+      "pyopenssl": {
+        "sha256": "6756834481d9ed5470f4a9393455154bc92fe7a64b7bc6ee2c804e78c52099b2",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/db/de/007b832ad7a95e6a73745609bbe123c407aa2c46bb0b8f765c8718294e7f/pyOpenSSL-23.3.0-py3-none-any.whl",
+        "version": "23.3.0"
       },
       "python-dotenv": {
         "sha256": "f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a",
@@ -281,6 +341,20 @@
           "multidict",
           "yarl"
         ],
+        "aioice": [
+          "dnspython",
+          "ifaddr"
+        ],
+        "aiortc": [
+          "aioice",
+          "av",
+          "cffi",
+          "cryptography",
+          "google-crc32c",
+          "pyee",
+          "pylibsrtp",
+          "pyopenssl"
+        ],
         "aiosignal": [
           "frozenlist"
         ],
@@ -289,7 +363,11 @@
           "sniffio"
         ],
         "attrs": [],
+        "av": [],
         "certifi": [],
+        "cffi": [
+          "pycparser"
+        ],
         "charset-normalizer": [],
         "click": [],
         "cmake": [],
@@ -303,15 +381,21 @@
           "typing-extensions",
           "uvicorn"
         ],
+        "cryptography": [
+          "cffi"
+        ],
+        "dnspython": [],
         "fastapi": [
           "pydantic",
           "starlette"
         ],
         "filelock": [],
         "frozenlist": [],
+        "google-crc32c": [],
         "h11": [],
         "httptools": [],
         "idna": [],
+        "ifaddr": [],
         "jinja2": [
           "markupsafe"
         ],
@@ -321,8 +405,18 @@
         "multidict": [],
         "networkx": [],
         "numpy": [],
+        "pycparser": [],
         "pydantic": [
           "typing-extensions"
+        ],
+        "pyee": [
+          "typing-extensions"
+        ],
+        "pylibsrtp": [
+          "cffi"
+        ],
+        "pyopenssl": [
+          "cryptography"
         ],
         "python-dotenv": [],
         "pyyaml": [],
@@ -390,15 +484,11 @@
           "yarl"
         ],
         "brotli": [],
-        "cffi": [
-          "pycparser"
-        ],
         "pycares": [
           "cffi"
-        ],
-        "pycparser": []
+        ]
       }
     }
   },
-  "invalidationHash": "c4a97ba13d84c1a5277a4d4d79c2b2ed2a5cb7435e92527dcaf59847703a8504"
+  "invalidationHash": "f049523c15e559f503879fe0c8479d6d4034c04e0899f17cb81bc58fc6870a13"
 }

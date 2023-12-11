@@ -146,7 +146,7 @@ class Predictor(BasePredictor):
             description="instead of a single prediction, handle a WebRTC offer as json, optionally with an ice_server key of ICE servers to use for connecting",
             default=None,
         ),
-    ) -> str:
+    ) -> ConcatenateIterator[str]:
         if webrtc_offer:
             yield from self.webrtc_helper(webrtc_offer)
             return
@@ -173,7 +173,7 @@ class Predictor(BasePredictor):
             # logprobs=logprobs,
         )
         print(f"generation took {time.time() - start:.3f}s")
-        return results[0]["generation"]  # results[0]["logprobs"]
+        yield results[0]["generation"]  # results[0]["logprobs"]
 
     # resolve Input to the correct default values
     defaults = {

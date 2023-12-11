@@ -111,7 +111,7 @@ class Llama:
         model = Transformer(model_args)
         print("=== created Mixtral 8x7B")
         loadable = ckpt_filelike or ckpt_path
-        checkpoint = torch.load(loadable)#, map_location="cpu")
+        checkpoint = torch.load(loadable)  # , map_location="cpu")
         model.load_state_dict(checkpoint, strict=False)
         print(f"Loaded in {time.time() - start_time:.2f} seconds")
 
@@ -324,10 +324,12 @@ class Llama:
                 "model only supports 'system', 'user' and 'assistant' roles, "
                 "starting with 'system', then 'user' and alternating (u/a/u/a/u...)"
             )
+            fmted = []
+            hack = lambda txt: fmted.append(txt) or txt
             dialog_tokens: List[int] = sum(
                 [
                     self.tokenizer.encode(
-                        f"{B_INST} {(prompt['content']).strip()} {E_INST} {(answer['content']).strip()} ",
+                        hack(f"{B_INST} {(prompt['content']).strip()} {E_INST} {(answer['content']).strip()} "),
                         bos=True,
                         eos=True,
                     )
@@ -340,11 +342,12 @@ class Llama:
             )
             assert dialog[-1]["role"] == "user", f"Last message must be from user, got {dialog[-1]['role']}"
             dialog_tokens += self.tokenizer.encode(
-                f"{B_INST} {(dialog[-1]['content']).strip()} {E_INST}",
+                hack(f"{B_INST} {(dialog[-1]['content']).strip()} {E_INST}"),
                 bos=True,
                 eos=False,
             )
             prompt_tokens.append(dialog_tokens)
+            print(f"approximate formatted prompt: {''.join(fmted)}")
 
         generation_tokens, generation_logprobs = self.generate(
             prompt_tokens=prompt_tokens,

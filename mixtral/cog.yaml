@@ -21,6 +21,7 @@ build:
     - "aiohttp[speedups]"
     - "sentencepiece==0.1.99"
     - "torch==2.0.1"
+    - "aiortc"
     - "numpy"
 
   # commands run after the environment is setup
