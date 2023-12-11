@@ -145,6 +145,12 @@
         "url": "https://files.pythonhosted.org/packages/d5/f0/8fbc882ca80cf077f1b246c0e3c3465f7f415439bdea6b899f6b19f61f70/networkx-3.2.1-py3-none-any.whl",
         "version": "3.2.1"
       },
+      "numpy": {
+        "sha256": "96ca5482c3dbdd051bcd1fce8034603d6ebfc125a7bd59f55b40d8f5d246832b",
+        "type": "url",
+        "url": "https://files.pythonhosted.org/packages/b6/ab/5b893944b1602a366893559bfb227fdfb3ad7c7629b2a80d039bb5924367/numpy-1.26.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "version": "1.26.2"
+      },
       "pycares": {
         "sha256": "b61579cecf1f4d616e5ea31a6e423a16680ab0d3a24a2ffe7bb1d4ee162477ff",
         "type": "url",
@@ -314,6 +320,7 @@
         "mpmath": [],
         "multidict": [],
         "networkx": [],
+        "numpy": [],
         "pydantic": [
           "typing-extensions"
         ],
@@ -393,5 +400,5 @@
       }
     }
   },
-  "invalidationHash": "851e4863ef41a07c4fd2b219258bae2bc740e42b9c9045285a9150ef48e6054d"
+  "invalidationHash": "c4a97ba13d84c1a5277a4d4d79c2b2ed2a5cb7435e92527dcaf59847703a8504"
 }
