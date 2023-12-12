@@ -10,7 +10,7 @@ from cog import BasePredictor, ConcatenateIterator, Input
 
 from src import Llama, Message
 from src.webrtc import RTC
-from utils import maybe_download_with_pget, get_loop
+from utils import get_loop, maybe_download_with_pget
 
 MODEL_ID = "mixtral-8x7b-32kseqlen"
 WEIGHTS_URL = "https://weights.replicate.delivery/hf/mixtral-8x7b-32kseqlen"
@@ -92,23 +92,23 @@ class Predictor(BasePredictor):
             # that's right, this calls into predict recursively!
             # in principle you could create new/forwarded sessions from an existing connection?
             # resolve Input to the correct default values
-            text = self.predict(**(self.defaults | args))
+            stream = self.predict(**(self.defaults | args))
 
-            # while True:
-            #     # while-next() seems to express timing more clearly than for-in here
-            #     tok_start = time.time()
-            #     tok = next(stream, None)
-            #     if tok is None:
-            #         break
-            now = time.time()
+            while True:
+                # while-next() seems to express timing more clearly than for-in here
+                tok_start = time.time()
+                tok = next(stream, None)
+                if tok is None:
+                    break
+                now = time.time()
 
-            #     token_count += 1
-            yield {
-                "text": text,
-                "token_gen_latency": round((now - start) * 1000),
-                # "gen_time": round((now - tok_start) * 1000),
-                # "idx": token_count,
-            }
+                token_count += 1
+                yield {
+                    "text": tok,
+                    "token_gen_latency": round((now - start) * 1000),
+                    # "gen_time": round((now - tok_start) * 1000),
+                    # "idx": token_count,
+                }
             elapsed = time.time() - start
             tps = token_count / elapsed
 
@@ -164,7 +164,7 @@ class Predictor(BasePredictor):
                 # logprobs=logprobs,
             )
             print(f"generation took {time.time() - start:.3f}s")
-            return results[0]["generation"]["content"]  # results[0]["logprobs"]
+            yield results[0]["generation"]["content"]  # results[0]["logprobs"]
         results = self.model.text_completion(
             prompts=[prompt],
             max_gen_len=max_new_tokens,
