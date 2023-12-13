@@ -4,9 +4,9 @@
 build:
   # set to true if your model requires a GPU
   gpu: true
-  cuda: "11.8"
-  system_packages:
-    - pget
+  cuda: "12.1"
+  # system_packages:
+  #   - pget
 
   # a list of ubuntu apt packages to install
   # system_packages:
@@ -20,13 +20,13 @@ build:
   python_packages:
     - "aiohttp[speedups]"
     - "sentencepiece==0.1.99"
-    - "torch==2.0.1"
+    - "torch"
     - "aiortc"
     - "numpy"
 
   # commands run after the environment is setup
-  # run:
-    # - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.3.2/pget" && chmod +x /usr/local/bin/pget
+  run:
+    - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.3.2/pget" && chmod +x /usr/local/bin/pget
     # - pip install numpy==1.26.0
     # - CUDA_HOME=/usr/local/cuda pip install vllm==0.2.2
     # - pip install --no-deps --no-cache cog-hf-template==0.0.12

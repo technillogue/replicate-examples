@@ -468,6 +468,7 @@ class Transformer(nn.Module):
         )
 
     @torch.inference_mode()
+    @torch.compile(mode="reduce-overhead")
     def forward(self, tokens: torch.Tensor, start_pos: int):
         """
         Perform a forward pass through the Transformer model.
