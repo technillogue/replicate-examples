@@ -1,12 +1,10 @@
 import os
 import time
-from pathlib import Path
 from threading import Thread
 
 import torch
 from cog import BasePredictor, ConcatenateIterator, Input
-
-from downloader import Downloader
+from utils import delay_prints, maybe_download_with_pget
 
 
 DEFAULT_MAX_NEW_TOKENS = os.environ.get("DEFAULT_MAX_NEW_TOKENS", 512)
@@ -19,7 +17,7 @@ TORCH_DTYPE_MAP = {
     "fp16": torch.float16,
     "fp32": torch.float32,
 }
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda"  # if torch.cuda.is_available() else "cpu"
 
 
 class TextGenerationPredictor(BasePredictor):
@@ -37,11 +35,8 @@ class TextGenerationPredictor(BasePredictor):
     trust_remote_code = False
 
     def setup(self):
-        downloader = Downloader()
         start = time.time()
-        downloader.sync_maybe_download_files(
-            self.hf_model_id, self.gcp_bucket_weights, self.remote_filenames
-        )
+        maybe_download_with_pget(self.hf_model_id, self.gcp_bucket_weights, self.remote_filenames)
         print(f"downloading weights took {time.time() - start:.3f}s")
 
         # os.environ["TRANSFORMERS_CACHE"] = self.cache_dir
@@ -79,6 +74,7 @@ class TextGenerationPredictor(BasePredictor):
             trust_remote_code=self.trust_remote_code,
         )
 
+    @delay_prints(REALLY_EAT_MY_PRINT_STATEMENTS=True)
     def predict(
         self,
         prompt: str,
@@ -100,7 +96,7 @@ class TextGenerationPredictor(BasePredictor):
         prompt_template: str = Input(
             description="The template used to format the prompt before passing it to the model.",
             default="<s>[INST] {prompt} [/INST]",
-        )
+        ),
     ) -> ConcatenateIterator:
         prompt = prompt_template.format(prompt=prompt)
         inputs = self.tokenizer(
@@ -122,6 +118,7 @@ class TextGenerationPredictor(BasePredictor):
 
         for text in streamer:
             yield text
+
 
 Predictor = TextGenerationPredictor
 Predictor.hf_model_id = "mixtral-8x7b-instruct-v0.1"
