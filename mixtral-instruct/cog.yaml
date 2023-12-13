@@ -22,9 +22,10 @@ build:
     - "transformers==4.36.0"
     - "sentencepiece==0.1.99"
     - "accelerate==0.25.0"
+    - "aiortc"
     # doesn't work with nix
-    #- "--no-build-isolation"
-   # - "flash-attn"
+    # - "--no-build-isolation"
+    # - "flash-attn"
 
   # commands run after the environment is setup
   # run:

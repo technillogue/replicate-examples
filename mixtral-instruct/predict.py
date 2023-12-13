@@ -1,10 +1,13 @@
+import inspect
 import os
 import time
 from threading import Thread
+from typing import Iterator
 
 import torch
 from cog import BasePredictor, ConcatenateIterator, Input
-from utils import delay_prints, maybe_download_with_pget
+from utils import delay_prints, get_loop, maybe_download_with_pget
+from webrtc import RTC
 
 
 DEFAULT_MAX_NEW_TOKENS = os.environ.get("DEFAULT_MAX_NEW_TOKENS", 512)
@@ -73,6 +76,48 @@ class TextGenerationPredictor(BasePredictor):
             local_files_only=self.local_files_only,
             trust_remote_code=self.trust_remote_code,
         )
+        self.loop = get_loop()
+
+    def webrtc_helper(self, offer: str) -> Iterator[str]:
+        print("creating connection for offer", offer)
+        rtc = RTC(offer)
+
+        @rtc.on_message
+        def handler(args: dict) -> Iterator[dict[str, str | int | float]]:
+            start = time.time()
+            token_count = 0
+            # that's right, this calls into predict recursively!
+            # in principle you could create new/forwarded sessions from an existing connection?
+            # resolve Input to the correct default values
+            stream = self.predict(**(self.defaults | args))
+            while True:
+                # while-next() seems to express timing more clearly than for-in here
+                tok_start = time.time()
+                tok = next(stream, None)
+                if tok is None:
+                    break
+                now = time.time()
+
+                token_count += 1
+                yield {
+                    "text": tok,
+                    "token_gen_latency": round((now - start) * 1000),
+                    "gen_time": round((now - tok_start) * 1000),
+                    "idx": token_count,
+                }
+            elapsed = time.time() - start
+            tps = token_count / elapsed
+
+            print(f"finished generating in {elapsed:.3f}, {tps:.2f} tok/s")
+            yield {"status": "done", "tokens_per_second": round(tps, 3)}
+
+        try:
+            yield self.loop.run_until_complete(rtc.answer())
+            yield self.loop.run_until_complete(rtc.wait_disconnect())
+        except RuntimeError:
+            self.loop = get_loop()
+            yield self.loop.run_until_complete(rtc.answer())
+            yield self.loop.run_until_complete(rtc.wait_disconnect())
 
     @delay_prints(REALLY_EAT_MY_PRINT_STATEMENTS=True)
     def predict(
@@ -97,7 +142,14 @@ class TextGenerationPredictor(BasePredictor):
             description="The template used to format the prompt before passing it to the model.",
             default="<s>[INST] {prompt} [/INST]",
         ),
+        webrtc_offer: str = Input(
+            description="instead of a single prediction, handle a WebRTC offer as json, optionally with an ice_server key of ICE servers to use for connecting",
+            default=None,
+        ),
     ) -> ConcatenateIterator:
+        if webrtc_offer:
+            yield from self.webrtc_helper(webrtc_offer)
+            return
         prompt = prompt_template.format(prompt=prompt)
         inputs = self.tokenizer(
             [prompt], return_tensors="pt", add_special_tokens=False, return_token_type_ids=False
@@ -119,6 +171,13 @@ class TextGenerationPredictor(BasePredictor):
         for text in streamer:
             yield text
 
+
+    # resolve Input to the correct default values
+    defaults = {
+        key: param.default.default
+        for key, param in inspect.signature(predict).parameters.items()
+        if hasattr(param.default, "default")
+    }
 
 Predictor = TextGenerationPredictor
 Predictor.hf_model_id = "mixtral-8x7b-instruct-v0.1"
